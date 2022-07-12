@@ -72,6 +72,7 @@ func (ti *TableImage) calculateWidth() {
 }
 
 func (ti *TableImage) saveFile() {
+	os.Remove(ti.filePath)
 	f, err := os.Create(ti.filePath)
 	if err != nil {
 		panic(err)
