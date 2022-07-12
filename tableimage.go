@@ -1,4 +1,4 @@
-package tableimage
+package tableImage
 
 import (
 	"image"
@@ -19,7 +19,7 @@ type TR struct {
 	Tds         []TD
 }
 
-type tableImage struct {
+type TableImage struct {
 	width           int
 	height          int
 	th              TR
@@ -42,8 +42,8 @@ const (
 )
 
 //Init initialise the table image receiver
-func Init(backgroundColor string, fileType FileType, filePath string) tableImage {
-	ti := tableImage{
+func Init(backgroundColor string, fileType FileType, filePath string) TableImage {
+	ti := TableImage{
 		backgroundColor: backgroundColor,
 		fileType:        fileType,
 		filePath:        filePath,
@@ -53,17 +53,17 @@ func Init(backgroundColor string, fileType FileType, filePath string) tableImage
 }
 
 //AddTH adds the table header
-func (ti *tableImage) AddTH(th TR) {
+func (ti *TableImage) AddTH(th TR) {
 	ti.th = th
 }
 
 //AddTRs add the table rows
-func (ti *tableImage) AddTRs(trs []TR) {
+func (ti *TableImage) AddTRs(trs []TR) {
 	ti.trs = trs
 }
 
 //Save saves the table
-func (ti *tableImage) Save() {
+func (ti *TableImage) Save() {
 	ti.calculateHeight()
 	ti.calculateWidth()
 
