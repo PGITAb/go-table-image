@@ -1,4 +1,4 @@
-package tableImage
+package tableimage
 
 import (
 	"image/jpeg"
