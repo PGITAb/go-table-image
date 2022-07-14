@@ -1,4 +1,4 @@
-module github.com/PGITAb/go-table-image
+module tableimage
 
 go 1.12
 
