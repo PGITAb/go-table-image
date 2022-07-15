@@ -50,8 +50,13 @@ func wrapText(input string) []string {
 	for i, word := range words {
 
 		if len(lineText)+len(word)+1 >= wrapWordsLen {
-			wrapped = append(wrapped, lineText)
+			//wrapped = append(wrapped, lineText)
 			lineText = word
+			newtextsplit := lineText[wrapWordsLen:]
+			newwrap := wrapText(newtextsplit)
+			fmt.Println("Val :", newtextsplit, newwrap, wrapWordsLen)
+			wrapped = append(wrapped, lineText[:wrapWordsLen])
+			wrapped = append(wrapped, newwrap...)
 		} else {
 			if lineText == "" {
 				lineText += word
