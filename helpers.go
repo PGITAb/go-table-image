@@ -46,17 +46,30 @@ func wrapText(input string) []string {
 	}
 
 	var lineText string
-
+	var newtextsplit string
+	var currenttext string
 	for i, word := range words {
-
 		if len(lineText)+len(word)+1 >= wrapWordsLen {
 			//wrapped = append(wrapped, lineText)
-			lineText = word
-			newtextsplit := lineText[wrapWordsLen:]
+			maxlen := wrapWordsLen - 1
+			if len(lineText) == 0 {
+				lineText = word
+				word = ""
+			}
+			newtextsplit = ""
+			currenttext = ""
+			if len(lineText) >= wrapWordsLen {
+				newtextsplit = lineText[maxlen:] + " " + word
+				currenttext = lineText[:maxlen]
+			} else {
+				newtextsplit = word
+				currenttext = lineText
+			}
+			//
 			newwrap := wrapText(newtextsplit)
-			fmt.Println("Val :", newtextsplit, newwrap, wrapWordsLen)
-			wrapped = append(wrapped, lineText[:wrapWordsLen])
+			wrapped = append(wrapped, currenttext)
 			wrapped = append(wrapped, newwrap...)
+			lineText = ""
 		} else {
 			if lineText == "" {
 				lineText += word
