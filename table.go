@@ -1,7 +1,6 @@
 package tableimage
 
 import (
-	"fmt"
 	"image/jpeg"
 	"image/png"
 	"os"
@@ -29,7 +28,7 @@ func (ti *TableImage) drawTR() {
 		maxRowHeight := 1
 		for colNo, td := range tds.Tds {
 			wrapedTexts := wrapText(td.Text)
-			fmt.Println(wrapedTexts, td.Text)
+			//fmt.Println(wrapedTexts, td.Text)
 			noRowPerCol := len(wrapedTexts)
 			if maxRowHeight < noRowPerCol {
 				maxRowHeight = noRowPerCol
