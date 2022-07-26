@@ -68,7 +68,7 @@ func (ti *TableImage) Save() {
 	ti.calculateWidth()
 
 	ti.setRgba()
-
+	ti.setRgbaTH("#C3D8F8")
 	ti.drawTH()
 	ti.drawTR()
 

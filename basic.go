@@ -6,8 +6,57 @@ import (
 
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/basicfont"
+	"golang.org/x/image/font/gofont/gomedium"
+	"golang.org/x/image/font/gofont/gomono"
+	"golang.org/x/image/font/inconsolata"
+	"golang.org/x/image/font/opentype"
+	"golang.org/x/image/font/sfnt"
 	"golang.org/x/image/math/fixed"
 )
+
+func defaultFaceOptions() *opentype.FaceOptions {
+	return &opentype.FaceOptions{
+		Size:    12,
+		DPI:     72,
+		Hinting: font.HintingNone,
+	}
+}
+
+var incosolataface font.Face = inconsolata.Bold8x16
+
+//https://cs.opensource.google/go/x/image/+/062f8c9f:font/opentype/opentype_test.go;l=27;bpv=1;bpt=1
+func initface() font.Face {
+	font, err := sfnt.Parse(gomedium.TTF)
+	if err != nil {
+		panic(err)
+	}
+	regular, err := opentype.NewFace(font, defaultFaceOptions())
+	if err != nil {
+		panic(err)
+	}
+	return regular
+}
+
+var gootherface = initface()
+
+var goboldface = basicfont.Face{
+	Advance: 7,
+	Width:   6,
+	Height:  13,
+	Ascent:  11,
+	Descent: 2,
+	//Left:    -1,
+	Mask: &image.Alpha{
+		Stride: 6,
+		Rect:   image.Rectangle{Max: image.Point{6, 96 * 13}},
+		Pix:    gomono.TTF, // this is incorrect, refer to https://cs.opensource.google/go/x/image/+/062f8c9f:font/inconsolata/bold8x16.go;bpv=1;bpt=1
+		//Pix: *(inconsolata.Bold8x16).Mask.Pix,
+	},
+	//Ranges: []basicfont.Range{
+	//	{'\u0020', '\u007f', 0},
+	//	{'\ufffd', '\ufffe', 95},
+	//},
+}
 
 func (ti *TableImage) setRgba() {
 	img := image.NewRGBA(image.Rect(0, 0, ti.width, ti.height))
@@ -16,15 +65,28 @@ func (ti *TableImage) setRgba() {
 	ti.img = img
 }
 
+func (ti *TableImage) setRgbaTH(hexcolor string) {
+	th_row := image.Rect(0, 0, ti.width, 1*rowSpace+separatorPadding)
+
+	//set image background
+	draw.Draw(ti.img, th_row, &image.Uniform{getColorByHex(hexcolor)}, image.ZP, draw.Src)
+
+	//draw.Draw(img, img.Bounds(), &image.Uniform{getColorByHex(hexcolor)}, image.ZP, draw.Src)
+	//ti.img = ti.img
+}
+
 func (ti *TableImage) addString(x, y int, label string, color string) {
 
 	point := fixed.Point26_6{fixed.Int26_6(x * 64), fixed.Int26_6(y * 64)}
 
 	d := &font.Drawer{
-		Dst:  ti.img,
-		Src:  image.NewUniform(getColorByHex(color)),
-		Face: basicfont.Face7x13,
-		Dot:  point,
+		Dst: ti.img,
+		Src: image.NewUniform(getColorByHex(color)),
+		//Face: basicfont.Face7x13, //original
+		//Face: gootherface,  //working face with ttf
+		Face: incosolataface, //additional option
+		//Face: &goboldface,  //not working
+		Dot: point,
 	}
 	d.DrawString(label)
 }
